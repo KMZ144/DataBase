@@ -1,0 +1,13 @@
+#! /usr/bin/bash
+read -p "Eneter name of data base " databaseName
+validation=$(. validName "$databaseName")
+if [[ validation -eq 0 ]] ; then
+if [[ -d ./$databaseName ]] ; then
+rm -r ./$databaseName
+echo "database $databaseName removed"
+else 
+echo "$databaseName not exists"
+fi
+else 
+echo "enter a valid name"
+fi

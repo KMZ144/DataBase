@@ -1,0 +1,49 @@
+#! /usr/bin/bash
+read -p "Eneter a valid name for Database to connect " databaseName
+validation=$(. validName "$databaseName")
+if [[ validation -eq 0 ]] ; then
+if [[  -d ./$databaseName ]] ; then
+cd ./$databaseName
+PS3="$databaseName --> "
+select choice in Create List Drop Insert Select Update Delete Exit
+do 
+case $choice  in 
+Create)
+. createTable
+;;
+List)
+ls -F | grep / -v
+;;
+Drop)
+. dropTable
+;;
+Insert)
+. insertTable
+;;
+Select)
+. selectTable
+;;
+Update)
+. updateTable
+;;
+Delete)
+. DeleteTable
+;;
+Exit)
+exit
+;;
+*)
+echo enter a valid choice
+;;
+esac
+done
+
+
+
+
+else 
+echo $databaseName not exists
+fi
+else 
+echo "enter a valid name"
+fi

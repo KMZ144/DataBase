@@ -1,2 +1,33 @@
 #! /usr/bin/bash
 dbPath=$(pwd)
+databaseFolder=$dbPath/DataBase
+if [[ ! -d $databaseFolder ]] ; then
+mkdir $dbPath/DataBase
+else 
+echo "DataBase Already exists"
+fi
+cd $dbPath/DataBase
+PS3="DB  >>  "
+select choice in Create List Drop Connect Exit
+do 
+case $choice  in 
+Create)
+. createDB
+;;
+List)
+ls -F | grep /
+;;
+Drop)
+. dropDB
+;;
+Connect)
+. connectDB
+;;
+Exit)
+exit
+;;
+*)
+echo enter a valid choice
+;;
+esac
+done
