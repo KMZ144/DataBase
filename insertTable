@@ -69,7 +69,6 @@ if [[ $colConstraint -eq 1 ]]; then
     else
     printf "$value:" >> "./$tableName"
 fi
-truncate -s -1 "./$tableName"
 done
-
+truncate -s -1 "./$tableName"
 echo >> "./$tableName"
