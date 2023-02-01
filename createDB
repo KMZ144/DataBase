@@ -1,7 +1,7 @@
 #! /usr/bin/bash
 read -p "Eneter a valid name for Database (No special charchters or white spaces) " databaseName
 validation=$(. validName "$databaseName")
-if [[ validation -eq 0 ]] ; then
+if [[ $validation -eq 0 ]] ; then
 if [[ ! -d ./$databaseName ]] ; then
 mkdir ./$databaseName
 echo database $databaseName created
