@@ -1,2 +1,101 @@
 #! /usr/bin/bash
-echo "creation done"
+validation=1
+validateTableName (){
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validation=$(. validName "$tableName")
+if [[ $validation -eq 0 ]] ; then
+if [[ ! -f ./$tableName ]] ; then
+touch ./$tableName
+touch ./"$tableName.meta"
+else 
+echo "$tableName already exist"
+exit
+fi
+fi
+}
+
+validateTableName
+while [[ $validation -ne 0 ]] ; do
+validateTableName
+done
+
+validateColNo(){
+    read -p "Enter no of columns " columns
+    if [[ $columns =~ ^[0-9]+$ ]] ; then
+    return
+    fi
+}
+validateColNo
+until [[ $columns =~ ^[0-9]+$ ]] ; do
+validateColNo
+done
+
+
+validateColName(){
+    read -p "Enter name for column " colName
+    validation=$(. validName "$colName")
+    if [[ $validation -eq 0 ]] ; then
+    isExist=$(cat ./"$tableName.meta" | grep $colName)
+        if [[ -z $isExist ]]; then
+            printf "$colName:" >> ./"$tableName.meta"
+            PS3="$colName -->   "
+        else
+        echo "Col Already Exist"
+        validateColName
+        fi
+    else
+    echo "Invalid Name for Column"
+    fi
+}
+
+
+PKFlag=0
+for (( i=0 ; i<$columns ; i++ )); do
+    validateColName
+    while [[ $validation -ne 0 ]]; do
+        validateColName
+    done
+    
+
+    select choice in string int
+    do 
+    case $choice  in 
+    string)
+  printf "$choice:" >> ./"$tableName.meta"
+    break
+    ;;
+    int)
+    printf "$choice:" >> ./"$tableName.meta"
+    break
+    ;;
+    *)
+    echo "Enter a valid choice"
+    ;;
+    esac
+    done
+
+
+if [[ PKFlag -eq 0 ]]; then
+     select choice in pk notPK
+    do 
+    case $choice  in 
+    pk)
+    PKFlag=1
+    printf "1 \n" >> ./"$tableName.meta"
+    break
+    ;;
+    notPK)
+    printf "0 \n" >> ./"$tableName.meta"
+    break
+    ;;
+    *)
+    echo "Enter a valid choice" 
+    ;;
+    esac
+    done
+    else 
+    printf "0 \n" >> ./"$tableName.meta"
+    fi
+    done
+    echo "$tableName created Successfully "
+
