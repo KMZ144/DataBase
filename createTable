@@ -3,7 +3,7 @@ valid=1
 validateTableName (){
 read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
 validation=$(. validName "$tableName")
-if [[ $validation -eq 0 ]] ; then
+if [[ $validation -eq 0 && ! -f ./$tableName ]] ; then
 if [[ ! -f ./$tableName ]] ; then
 touch ./$tableName
 touch ./"$tableName.meta"
