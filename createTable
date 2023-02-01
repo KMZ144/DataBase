@@ -1,5 +1,5 @@
 #! /usr/bin/bash
-validation=1
+valid=1
 validateTableName (){
 read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
 validation=$(. validName "$tableName")
@@ -7,15 +7,15 @@ if [[ $validation -eq 0 ]] ; then
 if [[ ! -f ./$tableName ]] ; then
 touch ./$tableName
 touch ./"$tableName.meta"
+valid=0
 else 
 echo "$tableName already exist"
-exit
 fi
 fi
 }
 
 validateTableName
-while [[ $validation -ne 0 ]] ; do
+while [[ $valid -ne 0 ]] ; do
 validateTableName
 done
 
@@ -98,4 +98,5 @@ if [[ PKFlag -eq 0 ]]; then
     fi
     done
     echo "$tableName created Successfully "
+PS3="$databaseName --> "
 
