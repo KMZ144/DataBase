@@ -7,7 +7,31 @@ select choice in byColumnValue allRecords Exit
 do 
 case $choice  in 
 byColumnValue)
-. createDB
+read -p "enter a valid column name: " column
+validation1=$(. validName "$column")
+order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
+if [[ $order -ne 0 ]]; then
+read -p "enter a valid value: " value
+falg=0
+deletedRows=$(awk -F : -v v=$value  -v o=$order '{if(v==$o){print NR}}' $table)
+rowsNum=0
+echo $deletedRows
+for i in $deletedRows;
+do
+echo ahmed
+#rowsNum=(($rowsNum+1))
+sed -i "${i}d" $table
+done
+if [[ $rowsNum -eq 0 ]]; then
+    echo 0 rows are affected
+else
+    echo "$rowsNum rows are affected"
+fi
+elif [[ $validation1 -eq 1 ]]; then
+    echo "columnname is invalid (No special charchters or white spa3ces)"
+else
+    echo "column not exists" 
+fi
 ;;
 allRecords)
 echo > $table

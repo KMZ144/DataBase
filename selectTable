@@ -1,5 +1,29 @@
 #! /usr/bin/bash
-
+read -p "enter a valid table name: " table
+validation=$(. validName "$table")
+if [[ -f $table ]]; then
+PS3="$table -->  "
+select choice in byColumnValue byColumnName Exit
+do 
+case $choice  in 
+byColumnValue)
+;;
+byColumnName)
+echo all records has been deleted successfully
+;;
+Exit)
+exit
+;;
+*)
+echo enter a valid choice
+;;
+esac
+done
+elif [[ $validation -eq 1 ]]; then
+    echo "table name is invalid (No special charchters or white spa3ces)"
+else
+    echo "table not exists" 
+fi
 
 
 
