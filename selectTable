@@ -3,13 +3,57 @@ read -p "enter a valid table name: " table
 validation=$(. validName "$table")
 if [[ -f $table ]]; then
 PS3="$table -->  "
-select choice in byColumnValue byColumnName Exit
+select choice in all byColumnValue byColumnName Exit
 do 
 case $choice  in 
+all)
+cut -d " " -f 1  $table
+echo all records has been selected successfully
+;;
 byColumnValue)
+read -p "enter a valid column name: " column
+validation1=$(. validName "$column")
+order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
+if [[ $order -ne 0 ]]; then
+read -p "enter a valid value: " value
+selectedRows=$(awk -F : -v v=$value  -v o=$order '{if(v==$o){print NR}}' $table)
+rowsNum=0
+falg=0
+echo $selectedRows
+for i in $selectedRows;
+do
+flag=$(($flag+1))
+if [[ $flag -eq 1 ]]; then
+falg1=0
+else
+i=$(($i-$flag+1))
+fi
+rowsNum=$(($rowsNum+1))
+echo $i
+sed -n "${i}p" $table
+done
+if [[ $rowsNum -eq 0 ]]; then
+    echo 0 rows are selected
+else
+    echo "$rowsNum rows are selected"
+fi
+elif [[ $validation1 -eq 1 ]]; then
+    echo "columnname is invalid (No special charchters or white spa3ces)"
+else
+    echo "column not exists" 
+fi
 ;;
 byColumnName)
-echo all records has been deleted successfully
+read -p "enter a valid column name: " column
+validation1=$(. validName "$column")
+order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
+if [[ $order -ne 0 ]]; then
+cut -d : -f "$order"  $table
+elif [[ $validation1 -eq 1 ]]; then
+    echo "column name is invalid (No special charchters or white spa3ces)"
+else
+    echo "column not exists" 
+fi
 ;;
 Exit)
 exit

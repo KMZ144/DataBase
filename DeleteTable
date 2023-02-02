@@ -13,20 +13,17 @@ order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
 if [[ $order -ne 0 ]]; then
 read -p "enter a valid value: " value
 deletedRows=$(awk -F : -v v=$value  -v o=$order '{if(v==$o){print NR}}' $table)
-echo $deletedRows
 rowsNum=0
 falg=0
 for i in $deletedRows;
 do
 flag=$(($flag+1))
 if [[ $flag -eq 1 ]]; then
-echo $i
 falg1=0
 else
 i=$(($i-$flag+1))
 fi
 rowsNum=$(($rowsNum+1))
-echo $i
 sed -i "${i}d" $table
 done
 if [[ $rowsNum -eq 0 ]]; then
@@ -35,7 +32,7 @@ else
     echo "$rowsNum rows are affected"
 fi
 elif [[ $validation1 -eq 1 ]]; then
-    echo "columnname is invalid (No special charchters or white spa3ces)"
+    echo "column name is invalid (No special charchters or white spa3ces)"
 else
     echo "column not exists" 
 fi
