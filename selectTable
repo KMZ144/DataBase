@@ -18,18 +18,9 @@ if [[ $order -ne 0 ]]; then
 read -p "enter a valid value: " value
 selectedRows=$(awk -F : -v v=$value  -v o=$order '{if(v==$o){print NR}}' $table)
 rowsNum=0
-falg=0
-echo $selectedRows
 for i in $selectedRows;
 do
-flag=$(($flag+1))
-if [[ $flag -eq 1 ]]; then
-falg1=0
-else
-i=$(($i-$flag+1))
-fi
 rowsNum=$(($rowsNum+1))
-echo $i
 sed -n "${i}p" $table
 done
 if [[ $rowsNum -eq 0 ]]; then
