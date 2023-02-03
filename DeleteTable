@@ -13,14 +13,11 @@ order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
 if [[ $order -ne 0 ]]; then
 read -p "enter a valid value: " value
 deletedRows=$(awk -F : -v v=$value  -v o=$order '{if(v==$o){print NR}}' $table)
-echo $deletedRows
 rowsNum=0
 flag=0
-echo $flag
 for i in $deletedRows;
 do
 flag=$(($flag+1))
-echo $flag
 if [[ $flag -ne 1 ]]; then
 i=$(($i-$flag+1))
 fi
@@ -40,7 +37,7 @@ fi
 ;;
 allRecords)
 echo > $table
-echo all records has been deleted successfully
+echo all records have been deleted successfully
 ;;
 Exit)
 exit

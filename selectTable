@@ -8,7 +8,7 @@ do
 case $choice  in 
 all)
 cut -d " " -f 1  $table
-echo all records has been selected successfully
+echo all records have been selected successfully
 ;;
 byColumnValue)
 read -p "enter a valid column name: " column
@@ -29,7 +29,7 @@ else
     echo "$rowsNum rows are selected"
 fi
 elif [[ $validation1 -eq 1 ]]; then
-    echo "columnname is invalid (No special charchters or white spa3ces)"
+    echo "column name is invalid (No special charchters or white spa3ces)"
 else
     echo "column not exists" 
 fi
@@ -40,6 +40,7 @@ validation1=$(. validName "$column")
 order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
 if [[ $order -ne 0 ]]; then
 cut -d : -f "$order"  $table
+echo column has been projected successfully
 elif [[ $validation1 -eq 1 ]]; then
     echo "column name is invalid (No special charchters or white spa3ces)"
 else
