@@ -2,9 +2,7 @@
 dbPath=$(pwd)
 databaseFolder=$dbPath/DataBase
 if [[ ! -d $databaseFolder ]] ; then
-mkdir $dbPath/DataBase
-else 
-echo "DataBase Already exists"
+mkdir $dbPath/DataBase 
 fi
 cd $dbPath/DataBase
 PS3="DB  >>  "

@@ -2,7 +2,7 @@
 read -p "enter a valid table name: " table
 validation=$(. validName "$table")
 if [[ -f $table ]]; then
-PS3="$table -->  "
+# PS3="$table -->  "
 select choice in byColumnValue allRecords Exit
 do 
 case $choice  in 
@@ -39,8 +39,9 @@ allRecords)
 echo > $table
 echo all records have been deleted successfully
 ;;
-Exit)
-exit
+"Back To Connect database")
+cd ../
+. connectDB
 ;;
 *)
 echo enter a valid choice

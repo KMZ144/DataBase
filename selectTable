@@ -2,8 +2,8 @@
 read -p "enter a valid table name: " table
 validation=$(. validName "$table")
 if [[ -f $table ]]; then
-PS3="$table -->  "
-select choice in all byColumnValue byColumnName Exit
+# PS3="$table -->  "
+select choice in all byColumnValue byColumnName "Back To Connect database"
 do 
 case $choice  in 
 all)
@@ -29,7 +29,7 @@ else
     echo "$rowsNum rows are selected"
 fi
 elif [[ $validation1 -eq 1 ]]; then
-    echo "column name is invalid (No special charchters or white spa3ces)"
+    echo "column name is invalid (No special charchters or white spaces)"
 else
     echo "column not exists" 
 fi
@@ -42,13 +42,16 @@ if [[ $order -ne 0 ]]; then
 cut -d : -f "$order"  $table
 echo column has been projected successfully
 elif [[ $validation1 -eq 1 ]]; then
-    echo "column name is invalid (No special charchters or white spa3ces)"
+    echo "column name is invalid (No special charchters or white spaces)"
 else
     echo "column not exists" 
 fi
 ;;
-Exit)
-exit
+"Back To Connect database")
+
+cd ../
+
+. connectDB
 ;;
 *)
 echo enter a valid choice
@@ -58,8 +61,10 @@ done
 elif [[ $validation -eq 1 ]]; then
     echo "table name is invalid (No special charchters or white spa3ces)"
 else
-    echo "table not exists" 
+    echo "table not exists"
 fi
+. connectDB
+
 
 
 

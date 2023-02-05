@@ -134,7 +134,6 @@ colNo=$(awk -F: -v n="$column" '{if($1==n){print NR}}' ./$tableName.meta)
 if [[ ! " ${columns[@]} " =~ " ${column} " ]]; then
 value=$(awk -F: -v n="$lineNo" -v l=$colNo '{if(NR==n){print $l}}' ./$tableName)
 updatedLine+="$value:"
-echo $updatedLine
 
 else
 
@@ -172,13 +171,12 @@ fi
 done
 updatedLine=${updatedLine::-1}
 
-echo $updatedLine
 
-sed -i "${lineNo}d" ./$tableName
+# sed -i "${lineNo}d" ./$tableName
 
-sed -i "${lineNo} i $updatedLine" ./$tableName
+# sed -i "${lineNo} i $updatedLine" ./$tableName
 
-# sed -i "${lineNo}s/.*/$updatedLine/" ./$tableName
+ sed -i "${lineNo}s/.*/$updatedLine/" ./$tableName
 # for l in ${lineNo[@]} ;do
 #     line=$(awk -F: -v li=$l "
 #     BEGIN {OFS = FS}{if(NR==li){for(i=0;i<NF;i++){for key in ${!array[@]}"; if ($key==i){$i=${array[$key]}}; done}}" ./$tableName)
