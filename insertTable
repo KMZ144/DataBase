@@ -72,3 +72,4 @@ fi
 done
 truncate -s -1 "./$tableName"
 echo >> "./$tableName"
+echo -e "${GREEN}insertion in $tableName done successfully${ENDCOLOR}" 

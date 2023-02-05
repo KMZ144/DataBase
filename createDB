@@ -4,10 +4,10 @@ validation=$(. validName "$databaseName")
 if [[ $validation -eq 0 ]] ; then
 if [[ ! -d ./$databaseName ]] ; then
 mkdir ./$databaseName
-echo database $databaseName created
+echo -e "${GREEN}database $databaseName created${ENDCOLOR}"
 else 
-echo $databaseName already exist
+echo -e "${RED}$databaseName already exist${ENDCOLOR}"
 fi
 else 
-echo "enter a valid name"
+echo -e "${RED}enter a valid name${ENDCOLOR}"
 fi

@@ -11,7 +11,7 @@ validateTableName (){
 read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
 validateTableName $tableName
 while [[ $? -ne 1 ]] ; do
-read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+read -p  "Eneter a valid name for table (No special charchters or white spaces) " tableName
 validateTableName $tableName
 done
 
@@ -68,7 +68,7 @@ for (( i=0 ; i<$columns ; i++ )); do
     break
     ;;
     *)
-    echo "Enter a valid choice"
+    echo -e "${RED}Enter a valid choice${ENDCOLOR}"
     ;;
     esac
     done
@@ -88,7 +88,7 @@ if [[ PKFlag -eq 0 ]]; then
     break
     ;;
     *)
-    echo "Enter a valid choice" 
+    echo -e "${RED}Enter a valid choice${ENDCOLOR}"
     ;;
     esac
     done
@@ -96,6 +96,6 @@ if [[ PKFlag -eq 0 ]]; then
     printf "0 \n" >> ./"$tableName.meta"
     fi
     done
-    echo "$tableName created Successfully "
+    echo -e "${GREEN}$tableName created Successfully${ENDCOLOR} "
 PS3="$databaseName --> "
 

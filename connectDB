@@ -37,7 +37,7 @@ Exit)
 exit
 ;;
 *)
-echo enter a valid choice
+echo -e "${RED}enter a valid choice${ENDCOLOR}"
 ;;
 esac
 done
@@ -46,8 +46,8 @@ done
 
 
 else 
-echo $databaseName not exists
+echo -e "${RED}$databaseName not exists${ENDCOLOR}"
 fi
 else 
-echo "enter a valid name"
+echo -e "${RED}enter a valid name${ENDCOLOR}"
 fi

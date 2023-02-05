@@ -8,7 +8,7 @@ do
 case $choice  in 
 all)
 cut -d " " -f 1  $table
-echo all records have been selected successfully
+echo -e "${GREEN}all records have been selected successfully${ENDCOLOR}"
 ;;
 byColumnValue)
 read -p "enter a valid column name: " column
@@ -24,14 +24,14 @@ rowsNum=$(($rowsNum+1))
 sed -n "${i}p" $table
 done
 if [[ $rowsNum -eq 0 ]]; then
-    echo 0 rows are selected
+    echo -e "${YELLOW}0 rows are selected${ENDCOLOR}"
 else
-    echo "$rowsNum rows are selected"
+    echo -e "${GREEN}$rowsNum rows are selected${ENDCOLOR}"
 fi
 elif [[ $validation1 -eq 1 ]]; then
-    echo "column name is invalid (No special charchters or white spaces)"
+    echo -e "${RED}column name is invalid (No special charchters or white spaces)${ENDCOLOR}"
 else
-    echo "column not exists" 
+    echo -e "${RED}column not exists${ENDCOLOR}" 
 fi
 ;;
 byColumnName)
@@ -40,11 +40,11 @@ validation1=$(. validName "$column")
 order=$(awk -F : -v m=$column '{if(m==$1){print NR}}' "$table.meta")
 if [[ $order -ne 0 ]]; then
 cut -d : -f "$order"  $table
-echo column has been projected successfully
+echo -e "${GREEN}column has been projected successfully${ENDCOLOR}"
 elif [[ $validation1 -eq 1 ]]; then
-    echo "column name is invalid (No special charchters or white spaces)"
+    echo -e "${RED}column name is invalid (No special charchters or white spaces)${ENDCOLOR}"
 else
-    echo "column not exists" 
+    echo -e "${RED}column not exists${ENDCOLOR}" 
 fi
 ;;
 "Back To Connect database")
@@ -57,14 +57,14 @@ Exit)
 exit
 ;;
 *)
-echo enter a valid choice
+echo -e "${RED}enter a valid choice${ENDCOLOR}"
 ;;
 esac
 done
 elif [[ $validation -eq 1 ]]; then
-    echo "table name is invalid (No special charchters or white spa3ces)"
+    echo -e "${RED}table name is invalid (No special charchters or white spaces)${ENDCOLOR}"
 else
-    echo "table not exists"
+    echo -e "${RED}table not exists${ENDCOLOR}"
 fi
 . connectDB
 

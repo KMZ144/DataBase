@@ -25,19 +25,19 @@ rowsNum=$(($rowsNum+1))
 sed -i "${i}d" $table
 done
 if [[ $rowsNum -eq 0 ]]; then
-    echo 0 rows are affected
+    echo -e "${GREEN}0 rows are affected${ENDCOLOR}"
 else
     echo "$rowsNum rows are affected"
 fi
 elif [[ $validation1 -eq 1 ]]; then
-    echo "column name is invalid (No special charchters or white spa3ces)"
+    echo -e "${RED}column name is invalid (No special charchters or white spaces)${ENDCOLOR}"
 else
-    echo "column not exists" 
+    echo -e "${RED}column not exists${ENDCOLOR}" 
 fi
 ;;
 allRecords)
 echo > $table
-echo all records have been deleted successfully
+echo -e "${GREEN}all records have been deleted successfully${ENDCOLOR}"
 ;;
 "Back To Connect database")
 cd ../
@@ -47,12 +47,12 @@ Exit)
 exit
 ;;
 *)
-echo enter a valid choice
+echo -e "${RED}enter a valid choice${ENDCOLOR}"
 ;;
 esac
 done
 elif [[ $validation -eq 1 ]]; then
-    echo "table name is invalid (No special charchters or white spa3ces)"
+    echo -e "${RED}table name is invalid (No special charchters or white spaces)${ENDCOLOR}"
 else
-    echo "table not exists" 
+    echo -e "${RED}table not exists${ENDCOLOR}" 
 fi

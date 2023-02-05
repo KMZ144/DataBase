@@ -1,4 +1,9 @@
 #! /usr/bin/bash
+
+export RED="\e[31m"
+export GREEN="\e[32m"
+export ENDCOLOR="\e[0m"
+
 dbPath=$(pwd)
 databaseFolder=$dbPath/DataBase
 if [[ ! -d $databaseFolder ]] ; then
@@ -25,7 +30,7 @@ Exit)
 exit
 ;;
 *)
-echo enter a valid choice
+echo -e  "${RED}enter a valid choice${ENDCOLOR}"
 ;;
 esac
 done

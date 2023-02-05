@@ -79,7 +79,7 @@ read -p "enter a valid value for $updatedColumn " updatedValue
 
 lineNo=$(awk -F: -v n="$colNo" -v f="$updatedValue" '{if($n==f){print NR}}' ./$tableName)
 while [[ -z $lineNo ]] ; do
-echo no such value
+echo -e "${RED}no such value${ENDCOLOR}"
 read -p "enter a valid value for $updatedColumn " updatedValue
 lineNo=$(awk -F: -v n="$colNo" -v f="$updatedValue" '{if($n==f){print NR}}' ./$tableName)
 done
@@ -106,13 +106,16 @@ read -a columns
 for column in ${columns[@]}  ; do
 validateColName $column
 if [[ $? -ne 1 ]] ; then
-echo "invalid column name" $column
-exit 
+echo -e "${RED}invalid column name $column${ENDCOLOR}"
+ cd ../
+. connectDB
 fi
 colConstraint=$(awk -F: -v n="$column" '{if($1==n){print $3}}' ./$tableName.meta)
 if [[ $colConstraint -eq 1 && $l -gt 1 ]] ; then
-    echo "can't update $column Primary key constraint "
-    exit
+    echo -e "${RED}can't update $column Primary key constraint ${ENDCOLOR}"
+     cd ../
+. connectDB
+    
 fi
 done
 
@@ -177,6 +180,7 @@ updatedLine=${updatedLine::-1}
 # sed -i "${lineNo} i $updatedLine" ./$tableName
 
  sed -i "${lineNo}s/.*/$updatedLine/" ./$tableName
+ echo -e "${GREEN}update done successfully${ENDCOLOR}"
 # for l in ${lineNo[@]} ;do
 #     line=$(awk -F: -v li=$l "
 #     BEGIN {OFS = FS}{if(NR==li){for(i=0;i<NF;i++){for key in ${!array[@]}"; if ($key==i){$i=${array[$key]}}; done}}" ./$tableName)
