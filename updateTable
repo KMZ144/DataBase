@@ -1,1 +1,187 @@
 #! /usr/bin/bash
+validateTableName (){
+    validation=$(. validName "$1")
+    if [[ $validation -eq 0 &&  -f ./$tableName ]]; then
+    return 1
+    fi
+    return 0
+}
+
+
+
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+while [[ $? -ne 1 ]] ; do
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+done
+
+
+noOfCol=$( cat $tableName.meta | wc -l )
+echo "columns in $tableName are"
+for (( i=1; i<=$noOfCol; i++ )) ; do
+colName=$(awk -F: -v n=$i '{if(NR==n){print $1}}' ./$tableName.meta)
+colConstraint=$(awk -F: -v n=$i '{if(NR==n){print $3}}' ./$tableName.meta)
+printf "$colName "
+if [[ $colConstraint -eq 1 ]]; then
+    printf "(primary key) "
+    updatedColumn=$colName
+fi
+echo
+done
+
+
+validateColName(){
+    validation=$(. validName "$1")
+    isExist=$(cat ./"$tableName.meta" | grep $1)
+    if [[ $validation -eq 0 && ! -z $isExist ]] ; then
+            return 1
+        fi
+        return 0
+}
+
+#where condition
+
+# read -p "enter a column name to update by " updatedColumn
+# validateColName $updatedColumn
+# while [[ $? -ne 1 ]] ; do
+# read -p "Enter an existing column " updatedColumn
+# validateColName $updatedColumn
+# done
+
+
+validateIntValue(){
+    if [[ $1 =~ ^[0-9]+$ ]] ; then
+    return 1
+    fi
+    return 0
+}
+
+validateUnique(){
+    data=$(awk -F: -v n=$1 '{print $n}' ./$tableName |grep $2)
+    if [[ -z $data ]]; then
+        return 1
+    fi
+    return 0
+}
+
+
+colType=$(awk -F: -v n=$updatedColumn '{if($1==n){print $2}}' ./$tableName.meta)
+colConstraint=$(awk -F: -v n=$updatedColumn '{if($1==n){print $3}}' ./$tableName.meta)
+colNo=$(awk -F: -v n="$updatedColumn" '{if($1==n){print NR}}' ./$tableName.meta)
+
+
+
+#where id = value here we are getting that value 
+
+read -p "enter a valid value for $updatedColumn " updatedValue
+
+
+lineNo=$(awk -F: -v n="$colNo" -v f="$updatedValue" '{if($n==f){print NR}}' ./$tableName)
+while [[ -z $lineNo ]] ; do
+echo no such value
+read -p "enter a valid value for $updatedColumn " updatedValue
+lineNo=$(awk -F: -v n="$colNo" -v f="$updatedValue" '{if($n==f){print NR}}' ./$tableName)
+done
+
+
+
+if [[ $colType == "int" ]]; then
+validateIntValue $updatedValue
+while [[ $? -ne 1 ]] ; do
+ read -p "enter int value for $updatedColumn " updatedValue
+validateIntValue $updatedValue
+done
+fi
+
+l=0
+for i in ${lineNo[@]} ;do
+l=$(($l+1))
+done
+
+
+
+echo "enter columns to be updated sperated by space" 
+read -a columns 
+for column in ${columns[@]}  ; do
+validateColName $column
+if [[ $? -ne 1 ]] ; then
+echo "invalid column name" $column
+exit 
+fi
+colConstraint=$(awk -F: -v n="$column" '{if($1==n){print $3}}' ./$tableName.meta)
+if [[ $colConstraint -eq 1 && $l -gt 1 ]] ; then
+    echo "can't update $column Primary key constraint "
+    exit
+fi
+done
+
+allColumns=$(awk -F:  '{print $1}' ./$tableName.meta)
+
+declare -A array
+
+
+k=0
+
+updatedLine=""
+
+for column in ${allColumns[@]}; do
+
+colType=$(awk -F: -v n="$column" '{if($1==n){print $2}}' ./$tableName.meta)
+colConstraint=$(awk -F: -v n="$column" '{if($1==n){print $3}}' ./$tableName.meta)
+colNo=$(awk -F: -v n="$column" '{if($1==n){print NR}}' ./$tableName.meta)
+
+if [[ ! " ${columns[@]} " =~ " ${column} " ]]; then
+value=$(awk -F: -v n="$lineNo" -v l=$colNo '{if(NR==n){print $l}}' ./$tableName)
+updatedLine+="$value:"
+echo $updatedLine
+
+else
+
+
+if [[ $colType == "int" ]]; then
+ read -p "enter int value for $column " value
+validateIntValue $value
+while [[ $? -ne 1 ]] ; do
+ read -p "enter int value for $column " value
+validateIntValue $value
+done
+fi
+
+
+if [[ $colType == "string" ]]; then
+read -p "enter a string value for $column " value
+fi
+
+k=$(($k+1))
+
+if [[ $colConstraint -eq 1 ]]; then
+    validateUnique $k $value
+    while [[ $? -eq 0 ]] ;do
+        read -p "Enter unique value " value
+        validateUnique $k $value
+    done
+    fi
+updatedLine+=$value:
+
+
+fi
+#     array+=([$colNo]=$value)
+# for key in "${!array[@]}"; do echo "$key => ${array[$key]}"; done
+
+done
+updatedLine=${updatedLine::-1}
+
+echo $updatedLine
+
+sed -i "${lineNo}d" ./$tableName
+
+sed -i "${lineNo} i $updatedLine" ./$tableName
+
+# sed -i "${lineNo}s/.*/$updatedLine/" ./$tableName
+# for l in ${lineNo[@]} ;do
+#     line=$(awk -F: -v li=$l "
+#     BEGIN {OFS = FS}{if(NR==li){for(i=0;i<NF;i++){for key in ${!array[@]}"; if ($key==i){$i=${array[$key]}}; done}}" ./$tableName)
+#     echo $line
+#     #sed -i "4s/.*/$line/" ./info
+# done

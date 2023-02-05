@@ -1,1 +1,101 @@
 #! /usr/bin/bash
+validateTableName (){
+    validation=$(. validName "$1")
+    if [[ $validation -eq 0 && ! -f ./$tableName ]]; then
+    return 1
+    fi
+    return 0
+}
+
+
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+while [[ $? -ne 1 ]] ; do
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+done
+
+
+touch ./$tableName
+touch ./"$tableName.meta"
+
+validateColNo(){
+    if [[ $1 =~ ^[0-9]+$ ]] ; then
+    return 1
+    fi
+    return 0
+}
+
+read -p "Enter no of columns " columns
+validateColNo $columns
+while [[ $? -ne 1 ]] ; do
+read -p "Enter no of columns " columns
+validateColNo $columns
+done
+
+
+validateColName(){
+    validation=$(. validName "$1")
+    isExist=$(cat ./"$tableName.meta" | grep $1)
+    if [[ $validation -eq 0 && -z $isExist ]] ; then
+            return 1
+        fi
+        return 0
+}
+
+
+PKFlag=0
+for (( i=0 ; i<$columns ; i++ )); do
+    read -p "Enter name for column " colName
+    validateColName $colName
+    while [[ $? -ne 1 ]]; do
+        read -p "Enter name for column " colName
+        validateColName $colName
+    done
+    printf "$colName:" >> ./"$tableName.meta"
+    PS3="$colName -->   "
+    
+
+    select choice in string int
+    do 
+    case $choice  in 
+    string)
+  printf "$choice:" >> ./"$tableName.meta"
+    break
+    ;;
+    int)
+    printf "$choice:" >> ./"$tableName.meta"
+    break
+    ;;
+    *)
+    echo "Enter a valid choice"
+    ;;
+    esac
+    done
+
+
+if [[ PKFlag -eq 0 ]]; then
+     select choice in pk notPK
+    do 
+    case $choice  in 
+    pk)
+    PKFlag=1
+    printf "1 \n" >> ./"$tableName.meta"
+    break
+    ;;
+    notPK)
+    printf "0 \n" >> ./"$tableName.meta"
+    break
+    ;;
+    *)
+    echo "Enter a valid choice" 
+    ;;
+    esac
+    done
+    else 
+    printf "0 \n" >> ./"$tableName.meta"
+    fi
+    done
+    echo "$tableName created Successfully "
+PS3="$databaseName --> "
+

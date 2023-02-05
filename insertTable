@@ -1,1 +1,74 @@
 #! /usr/bin/bash
+validateTableName (){
+    validation=$(. validName "$1")
+    if [[ $validation -eq 0 &&  -f ./$tableName ]]; then
+    return 1
+    fi
+    return 0
+}
+
+
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+while [[ $? -ne 1 ]] ; do
+read -p "Eneter a valid name for table (No special charchters or white spaces) " tableName
+validateTableName $tableName
+done
+
+
+
+validateIntValue(){
+    if [[ $1 =~ ^[0-9]+$ ]] ; then
+    return 1
+    fi
+    return 0
+}
+
+validateUnique(){
+    data=$(awk -F: -v n=$1 '{print $n}' ./$tableName |grep $2)
+    if [[ -z $data ]]; then
+        return 1
+    fi
+    return 0
+}
+
+
+noOfCol=$( cat $tableName.meta | wc -l )
+
+for (( i=1; i<=$noOfCol; i++ )) ; do
+
+
+colName=$(awk -F: -v n=$i '{if(NR==n){print $1}}' ./$tableName.meta)
+colType=$(awk -F: -v n=$i '{if(NR==n){print $2}}' ./$tableName.meta)
+colConstraint=$(awk -F: -v n=$i '{if(NR==n){print $3}}' ./$tableName.meta)
+
+
+
+if [[ $colType == "int" ]]; then
+ read -p "enter int value for $colName " value
+validateIntValue $value
+while [[ $? -ne 1 ]] ; do
+ read -p "enter int value for $colName " value
+validateIntValue $value
+done
+fi
+
+
+if [[ $colType == "string" ]]; then
+read -p "enter a string value for $colName " value
+fi
+
+
+if [[ $colConstraint -eq 1 ]]; then
+    validateUnique $i $value
+    while [[ $? -eq 0 ]] ;do
+        read -p "Enter unique value " value
+        validateUnique $i $value
+    done
+    printf "$value:" >> "./$tableName"
+    else
+    printf "$value:" >> "./$tableName"
+fi
+done
+truncate -s -1 "./$tableName"
+echo >> "./$tableName"
