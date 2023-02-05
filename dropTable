@@ -1,0 +1,11 @@
+#! /usr/bin/bash
+read -p "enter a valid table name: " table
+validation=$(. validName "$table")
+if [[ -f $table ]]; then
+    rm $table
+    echo table has been removed successfully
+elif [[ $validation -eq 1 ]]; then
+    echo "table name is invalid (No special charchters or white spa3ces)"
+else
+    echo "table not exists" 
+fi
