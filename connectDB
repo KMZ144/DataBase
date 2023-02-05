@@ -5,7 +5,7 @@ if [[ validation -eq 0 ]] ; then
 if [[  -d ./$databaseName ]] ; then
 cd ./$databaseName
 PS3="$databaseName --> "
-select choice in Create List Drop Insert Select Update Delete "Back To Database Menu"
+select choice in Create List Drop Insert Select Update Delete "Back To Database Menu" Exit
 do 
 case $choice  in 
 Create)
@@ -32,6 +32,9 @@ Delete)
 "Back To Database Menu")
 cd ../..
 . database
+;;
+Exit)
+exit
 ;;
 *)
 echo enter a valid choice
