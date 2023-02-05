@@ -2,7 +2,7 @@
 read -p "enter a valid table name: " table
 validation=$(. validName "$table")
 if [[ -f $table ]]; then
-# PS3="$table -->  "
+ PS3="$table -->  "
 select choice in all byColumnValue byColumnName "Back To Connect database"
 do 
 case $choice  in 
