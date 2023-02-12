@@ -62,6 +62,7 @@ fi
 if [[ $colConstraint -eq 1 ]]; then
     validateUnique $i $value
     while [[ $? -eq 0 ]] ;do
+        echo -e "${RED}unique value constraint${ENDCOLOR} "
         read -p "Enter unique value " value
         validateUnique $i $value
     done

@@ -25,9 +25,9 @@ rowsNum=$(($rowsNum+1))
 sed -i "${i}d" $table
 done
 if [[ $rowsNum -eq 0 ]]; then
-    echo -e "${GREEN}0 rows are affected${ENDCOLOR}"
+    echo -e "${YELLOW}0 rows are affected${ENDCOLOR}"
 else
-    echo "$rowsNum rows are affected"
+    echo -e  "${GREEN} $rowsNum rows are affected${ENDCOLOR}"
 fi
 elif [[ $validation1 -eq 1 ]]; then
     echo -e "${RED}column name is invalid (No special charchters or white spaces)${ENDCOLOR}"

@@ -2,6 +2,7 @@
 
 export RED="\e[31m"
 export GREEN="\e[32m"
+export YELLOW="\e[33m"
 export ENDCOLOR="\e[0m"
 
 dbPath=$(pwd)
